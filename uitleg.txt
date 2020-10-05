@@ -1,0 +1,11 @@
+RMI
+--> multithreading gebeurd automatisch voor u
+--> wat als er meerdere dingen tegelijk gebeuren ? (race-condities)
+in java kan je synchronized gebruiken (maar waar overal ?)
+
+
+--> berichten ontvangen van server
+RMI: in 1 richting (geen polling vanuit de client)
+	-call blocken tot nieuw bericht binnen komt (makkelijkste)
+	-client zet zelf rmi server op (geen fan)
+	-callbacks
