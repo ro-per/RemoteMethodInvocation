@@ -1,9 +1,6 @@
-package client;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import server.ChatServerInterface;
 
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -14,6 +11,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class ChatClient extends UnicastRemoteObject implements ChatClientInterface {
 
+    private static final long serialVersionUID = 77L;
     private String userName;
     private String serverName;
     private int serverPortNumber;
@@ -28,8 +26,12 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         messages = FXCollections.observableArrayList();
         users = FXCollections.observableArrayList();
 
+    }
+
+    public void start() throws RemoteException, NotBoundException {
+
         Registry registry = LocateRegistry.getRegistry(serverName, serverPortNumber);
-        server = (ChatServerInterface) registry.lookup(ChatServerInterface.SERVICE_NAME);
+        server = (ChatServerInterface)registry.lookup(ChatServerInterface.SERVICE_NAME);
     }
 
     public void broadcast(String message) {
@@ -44,10 +46,9 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         }
     }
 
-    public boolean checkUserName(String name) throws RemoteException {
+    public boolean isConnected(String name) throws RemoteException {
 
-        if (server.isValidUserName(name)) {
-            server.addUser(name, this);
+        if (server.isConnected(name,this)) {
             userName = name;
             return true;
         }
@@ -56,7 +57,7 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
 
     public void leave() {
         try {
-            server.removeUser(userName, this);
+            server.removeUser(userName,this);
 
         } catch (RemoteException e) {
             e.printStackTrace();

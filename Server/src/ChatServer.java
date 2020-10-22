@@ -1,10 +1,6 @@
-package server;
-
-import client.ChatClientInterface;
 import javafx.collections.ObservableList;
 
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
@@ -16,20 +12,23 @@ public class ChatServer extends UnicastRemoteObject implements ChatServerInterfa
 
     private Map<String, ChatClientInterface> userNames = new HashMap<>();
     private ObservableList<String> users;
+    private Registry registry;
 
     public ChatServer() throws RemoteException {
         super();
     }
 
-
     @Override
     public void broadcast(String name, String msg) {
         String formattedMsg = formatMessage(name, msg);
+        broadcast(formattedMsg);
+    }
 
+    private void broadcast(String msg){
         Iterator<Map.Entry<String, ChatClientInterface>> iterator = userNames.entrySet().iterator();
         while (iterator.hasNext()) {
             try {
-                iterator.next().getValue().receiveMessage(formattedMsg);
+                iterator.next().getValue().receiveMessage(msg);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -37,25 +36,25 @@ public class ChatServer extends UnicastRemoteObject implements ChatServerInterfa
     }
 
     @Override
-    public void addUser(String username, ChatClientInterface client) throws RemoteException {
-        userNames.put(username, client);
-        client.addToUsers(username);
-        client.receiveMessage(username + " has entered the chat");
+    public boolean isConnected(String username, ChatClientInterface client) throws RemoteException {
+        if (isValidUserName(username)) {
+            userNames.put(username, client);
+            client.addToUsers(username);
+            client.receiveMessage(welcomeMessage(username));
+            broadcast(enterMessage(username));
+            return true;
+        } else return false;
     }
 
     @Override
     public void removeUser(String username, ChatClientInterface client) throws RemoteException {
-        userNames.remove(username);
         client.removeFromUsers(username);
+        userNames.remove(username);
+        broadcast(leaveMessage(username));
     }
 
-    Set<String> getUserNames() {
-        return this.userNames.keySet();
-    }
 
-    @Override
-    public boolean isValidUserName(String userName) {
-
+    private boolean isValidUserName(String userName) {
         return !userNames.containsKey(userName);
     }
 
@@ -63,11 +62,20 @@ public class ChatServer extends UnicastRemoteObject implements ChatServerInterfa
         return "[" + userName + "]: " + msg;
     }
 
-    public static void main(String[] args) throws RemoteException {
-        int portNumber = 1099;
-        Registry registry = LocateRegistry.createRegistry(portNumber);
-        registry.rebind(ChatServerInterface.SERVICE_NAME, new ChatServer());
+    private String welcomeMessage(String userName){
+        return "Welcome " + userName;
     }
 
+    private String enterMessage(String userName){
+        return userName + " has entered the chat";
+    }
+
+    private String leaveMessage(String userName){
+        return userName + " has left the chat";
+    }
+
+    Set<String> getUserNames() {
+        return this.userNames.keySet();
+    }
 
 }
