@@ -1,10 +1,8 @@
 package server;
 
 import client.ChatClientInterface;
+import javafx.collections.ObservableList;
 
-import java.net.MalformedURLException;
-import java.rmi.AlreadyBoundException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -17,6 +15,7 @@ import java.util.Set;
 public class ChatServer extends UnicastRemoteObject implements ChatServerInterface {
 
     private Map<String, ChatClientInterface> userNames = new HashMap<>();
+    private ObservableList<String> users;
 
     public ChatServer() throws RemoteException {
         super();
@@ -38,13 +37,16 @@ public class ChatServer extends UnicastRemoteObject implements ChatServerInterfa
     }
 
     @Override
-    public void addUser(String username, ChatClientInterface client) {
+    public void addUser(String username, ChatClientInterface client) throws RemoteException {
         userNames.put(username, client);
+        client.addToUsers(username);
+        client.receiveMessage(username + " has entered the chat");
     }
 
     @Override
-    public void removeUser(String username) {
+    public void removeUser(String username, ChatClientInterface client) throws RemoteException {
         userNames.remove(username);
+        client.removeFromUsers(username);
     }
 
     Set<String> getUserNames() {
@@ -54,21 +56,17 @@ public class ChatServer extends UnicastRemoteObject implements ChatServerInterfa
     @Override
     public boolean isValidUserName(String userName) {
 
-        if (userNames.keySet().contains(userName)) {
-            return false;
-        } else {
-            return true;
-        }
+        return !userNames.containsKey(userName);
     }
 
     private String formatMessage(String userName, String msg) {
-        return "[ " + userName + " ]: " + msg;
+        return "[" + userName + "]: " + msg;
     }
 
-    public static void main(String[] args) throws RemoteException, AlreadyBoundException, MalformedURLException {
+    public static void main(String[] args) throws RemoteException {
         int portNumber = 1099;
         Registry registry = LocateRegistry.createRegistry(portNumber);
-        Naming.rebind(ChatServerInterface.SERVICE_NAME, new ChatServer());
+        registry.rebind(ChatServerInterface.SERVICE_NAME, new ChatServer());
     }
 
 

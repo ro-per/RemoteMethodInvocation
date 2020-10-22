@@ -10,8 +10,6 @@ import java.io.IOException;
 
 public class ChatApplication extends Application {
 
-    private final String title = "RMI-based Chat service";
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -22,11 +20,12 @@ public class ChatApplication extends Application {
 
         Scene scene = new Scene(root, 300, 275);
 
+        String title = "RMI-based Chat service";
         primaryStage.setTitle(title);
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.setFullScreen(false);
         primaryStage.show();
     }
-    
+
 }
