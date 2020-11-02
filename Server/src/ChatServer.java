@@ -12,7 +12,6 @@ public class ChatServer extends UnicastRemoteObject implements ChatServerInterfa
 
     private Map<String, ChatClientInterface> userNames = new HashMap<>();
     private ObservableList<String> users;
-    private Registry registry;
 
     public ChatServer() throws RemoteException {
         super();
@@ -36,7 +35,7 @@ public class ChatServer extends UnicastRemoteObject implements ChatServerInterfa
     }
 
     @Override
-    public boolean isConnected(String username, ChatClientInterface client) throws RemoteException {
+    public boolean connectUser(String username, ChatClientInterface client) throws RemoteException {
         if (isValidUserName(username)) {
             userNames.put(username, client);
             client.addToUsers(username);
