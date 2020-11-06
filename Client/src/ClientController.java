@@ -5,6 +5,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.Lighting;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import messages.Message;
+import messages.MessageType;
 
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -93,7 +95,7 @@ public class ClientController {
                 this.userName.clear();
                 this.serverName.clear();
                 this.portNumber.clear();
-                client.receiveMessage(ERROR_DUPLICATE_USERNAME);
+                client.receiveMessage(new Message(MessageType.PRIVATE,"Error duplicate username"));
             }
 
         } catch (RemoteException | MalformedURLException | NotBoundException  e) {
@@ -139,7 +141,7 @@ public class ClientController {
             message.setText(ERROR_EMPTY_MESSAGE);
             message.clear();
         }
-        client.broadcast(msg);
+        client.sendBroadcast(msg);
     }
 
 
