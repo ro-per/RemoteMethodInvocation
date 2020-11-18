@@ -1,3 +1,5 @@
+package gui;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
@@ -5,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.Lighting;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import main.ChatClient;
 import messages.Message;
 import messages.MessageType;
 
@@ -37,7 +40,7 @@ public class ClientController {
     @FXML
     private ScrollPane messageListScrollPane;
 
-    private ChatClient client;
+    private ChatClient chatClient;
 
     public void keyPressed(KeyEvent ke) {
         if (ke.getCode().equals(KeyCode.ENTER)) sendMessage();
@@ -88,21 +91,21 @@ public class ClientController {
     private void connectToServer(String userName, String serverName, int portNumber) {
 
         try {
-            client = new ChatClient(serverName, portNumber);
-            client.start();
+            chatClient = new ChatClient(serverName, portNumber);
+            chatClient.start();
 
-            if (!client.isConnected(userName)) {
+            if (!chatClient.connectUser(userName)) {
                 this.userName.clear();
                 this.serverName.clear();
                 this.portNumber.clear();
-                client.receiveMessage(new Message(MessageType.PRIVATE,"Error duplicate username"));
+                chatClient.receiveMessage(new Message(MessageType.PRIVATE,"Error duplicate username"));
             }
 
         } catch (RemoteException | MalformedURLException | NotBoundException  e) {
             e.printStackTrace();
         }
 
-        chatPane.setItems(client.getMessages());
+        chatPane.setItems(chatClient.getMessagesPublic());
 
     }
 
@@ -141,7 +144,7 @@ public class ClientController {
             message.setText(ERROR_EMPTY_MESSAGE);
             message.clear();
         }
-        client.sendBroadcast(msg);
+        chatClient.sendBroadcastMsg(msg);
     }
 
 

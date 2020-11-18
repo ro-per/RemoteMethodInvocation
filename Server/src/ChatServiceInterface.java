@@ -1,3 +1,4 @@
+import main.ChatClientInterface;
 import messages.Message;
 import user.User;
 

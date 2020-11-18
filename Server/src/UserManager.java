@@ -1,5 +1,6 @@
 import exceptions.DuplicateUsernameException;
 import exceptions.UserNotFoundException;
+import main.ChatClientInterface;
 import user.User;
 
 import java.util.*;

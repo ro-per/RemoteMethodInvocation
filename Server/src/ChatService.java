@@ -1,6 +1,8 @@
 import com.sun.istack.internal.Nullable;
 import exceptions.DuplicateUsernameException;
 import exceptions.UserNotFoundException;
+import main.ChatClientInterface;
+import main.ChatServiceInterface;
 import messages.Message;
 import messages.MessageType;
 import user.User;

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<BorderPane onKeyPressed="#keyPressed" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.login.LoginController">
+
+    <center>
+
+        <TextField fx:id="serverField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#serverClicked" promptText="server" text="localhost">
+
+        </TextField>
+
+
+    </center>
+    <top>
+        <Label fx:id="welcomelabel" alignment="TOP_CENTER" text="Welcome" textAlignment="CENTER" underline="true" BorderPane.alignment="CENTER">
+            <font>
+                <Font size="21.0" />
+            </font>
+        </Label>
+    </top>
+    <bottom>
+        <Button fx:id="connectButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#connectButtonAction" prefWidth="80.0" text="Connect" BorderPane.alignment="CENTER">
+
+        </Button>
+    </bottom>
+    <left>
+
+
+        <TextField fx:id="userField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#userNameClicked" promptText="username" BorderPane.alignment="CENTER">
+
+        </TextField>
+    </left>
+    <right>
+        <TextField fx:id="portField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#portClicked" promptText="port" text="1000" BorderPane.alignment="CENTER">
+
+        </TextField>
+    </right>
+
+</BorderPane>

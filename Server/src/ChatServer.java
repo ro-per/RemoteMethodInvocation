@@ -1,4 +1,5 @@
 import com.sun.istack.internal.Nullable;
+import main.ChatServiceInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

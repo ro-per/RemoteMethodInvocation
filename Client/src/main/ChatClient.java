@@ -1,3 +1,5 @@
+package main;
+
 import com.sun.istack.internal.Nullable;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -21,29 +23,33 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
     private static final long serialVersionUID = 77L;
     private static final Logger logger = Logger.getLogger(ChatClient.class.getName());
 
-    private User user;
-    private String serverName;
-    private int serverPortNumber;
-    private final ObservableList<String> messages;
-    private final ObservableList<String> users;
     private ChatServiceInterface service;
+    private String server;
+    private int serverPortNumber;
+    private final ObservableList<String> messagesPublic;
+    private final ObservableList<String> messagesPrivate;
+    private final ObservableList<String> users;
+    private User user;
 
     public ChatClient(String serverName, int serverPortNumber) throws RemoteException, MalformedURLException, NotBoundException {
         super();
-        this.serverName = serverName;
+        this.server = serverName;
         this.serverPortNumber = serverPortNumber;
-        messages = FXCollections.observableArrayList();
-        users = FXCollections.observableArrayList();
+
+        //ClientThread Part
+        this.messagesPublic = FXCollections.observableArrayList();
+        this.messagesPrivate = FXCollections.observableArrayList();
+        this.users = FXCollections.observableArrayList();
 
     }
 
     public void start() throws RemoteException, NotBoundException {
-
-        Registry registry = LocateRegistry.getRegistry(serverName, serverPortNumber);
+        Registry registry = LocateRegistry.getRegistry(server, serverPortNumber);
         service = (ChatServiceInterface) registry.lookup(ChatServiceInterface.SERVICE_NAME);
     }
 
-    public boolean isConnected(String name) throws RemoteException {
+    /*  -------------------------------- CONNECT/DISCONNECT -------------------------------- */
+    public boolean connectUser(String name) throws RemoteException {
         user = new User(name);
         if (service.connectUser(user, this)) {
             info("Trying to connect " + name);
@@ -52,13 +58,24 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         return false;
     }
 
-    public void sendBroadcast(String message) {
-        new Thread(() -> this.sendBroadcastMsg(message)).start();
+    public void disconnectUser() {
+        try {
+            service.disconnectUser(user, this);
+            info("Leaving...");
+        } catch (RemoteException e) {
+            error("Could not connect with the server.");
+            e.printStackTrace();
+        }
     }
 
-    private void sendBroadcastMsg(String text) {
-        Message message = new Message(user, MessageType.BROADCAST, text);
 
+    /*  -------------------------------- SENDING MESSAGES -------------------------------- */
+    public void sendBroadcastMsg(String message) {
+        new Thread(() -> this.sendBroadcastUtil(message)).start();
+    }
+
+    private void sendBroadcastUtil(String text) {
+        Message message = new Message(user, MessageType.BROADCAST, text);
         try {
             info("Broadcasting...");
             service.sendBroadcastMsg(message);
@@ -78,20 +95,21 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         }
     }
 
-    public void leave() {
+    public void sendRequestPrivateMSG(String text, String receiver) {
+        Message message = new Message(user, MessageType.REQUEST_PRIVATE, text, receiver); // PRIVATE has 1 receiver
         try {
-            service.disconnectUser(user, this);
-            info("Leaving...");
-        } catch (RemoteException e) {
+            info("Sending private message ...");
+            service.sendPrivateMsg(message);
+        } catch (IOException e) {
             error("Could not connect with the server.");
-            e.printStackTrace();
         }
     }
 
 
+
     @Override
     public void receiveMessage(Message message) throws RemoteException {
-        Platform.runLater(() -> messages.add(message.getContent()));
+        Platform.runLater(() -> messagesPublic.add(message.getContent()));
     }
 
     @Override
@@ -112,8 +130,12 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         logger.log(Level.WARNING, msg, params);
     }
 
-    public ObservableList<String> getMessages() {
-        return messages;
+    public ObservableList<String> getMessagesPublic() {
+        return messagesPublic;
+    }
+
+    public ObservableList<String> getMessagesPrivate() {
+        return messagesPrivate;
     }
 
     public ObservableList<String> getUsers() {
@@ -128,12 +150,12 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         this.user = user;
     }
 
-    public String getServerName() {
-        return serverName;
+    public String getServer() {
+        return server;
     }
 
-    public void setServerName(String serverName) {
-        this.serverName = serverName;
+    public void setServer(String server) {
+        this.server = server;
     }
 
     public int getServerPortNumber() {
@@ -143,4 +165,13 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
     public void setServerPortNumber(int serverPortNumber) {
         this.serverPortNumber = serverPortNumber;
     }
+
+    public void clearPrivateMessages() {
+        messagesPrivate.clear();
+    }
+
+    public void addPrivateMessage(Message message) {
+        messagesPrivate.add(message.getContent());
+    }
+
 }

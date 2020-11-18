@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #fcccf3;"
+            xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gui.chat.PrivatChatController">
+    <top>
+        <AnchorPane BorderPane.alignment="CENTER">
+            <children>
+                <Label fx:id="chatTitle" maxHeight="-Infinity" prefHeight="30.0" text="Chat title"
+                       textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+
+            </children>
+        </AnchorPane>
+    </top>
+    <center>
+        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308"
+                            maxWidth="1.7976931348623157E308" pannable="true" prefHeight="496.0" vbarPolicy="ALWAYS"
+                            vmin="1.0" vvalue="1.0" VBox.vgrow="ALWAYS">
+                    <content>
+                        <ListView fx:id="chatPanePrivate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                                  prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparant;"/>
+                    </content>
+                </ScrollPane>
+            </children>
+            <padding>
+                <Insets bottom="2.5" left="2.5" right="2.5" top="2.5"/>
+            </padding>
+        </VBox>
+    </center>
+
+
+    <bottom>
+        <HBox fx:id="input_box" alignment="BOTTOM_RIGHT" maxHeight="1.7976931348623157E308"
+              maxWidth="1.7976931348623157E308" prefHeight="30.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <AnchorPane HBox.hgrow="ALWAYS">
+                    <children>
+                        <TextField fx:id="msgField" maxHeight="-Infinity" onKeyPressed="#keyPressed"
+                                   onMouseClicked="#messageFieldClicked" prefHeight="30.0" promptText="Enter Message"
+                                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                    </children>
+                </AnchorPane>
+                <Button fx:id="send_button_private" maxHeight="-Infinity" mnemonicParsing="false"
+                        onAction="#sendPrivateAction" prefHeight="30.0" prefWidth="80.0" text="Send"
+                        textAlignment="CENTER"/>
+            </children>
+            <padding>
+                <Insets bottom="2.5" left="2.5" right="2.5" top="2.5"/>
+            </padding>
+        </HBox>
+
+    </bottom>
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+    </padding>
+
+
+</BorderPane>
