@@ -20,10 +20,7 @@ import java.util.logging.Logger;
 
 public class PublicChatController {
     private final Logger logger = Logger.getLogger(PublicChatController.class.getName());
-
-
     private ChatClient chatClient = null;
-
     /* ----------------------------- @FXML ----------------------------- */
     @FXML
     private TextField msgField;
@@ -34,14 +31,12 @@ public class PublicChatController {
     @FXML
     private ListView<String> userPane;
 
-
     public void initialize() {
-        chatPanePublic.setItems(ChatApplication.chatClient.getMessagesPublic());
+        chatPanePublic.setItems(ChatApplication.chatClient.getPublicMessages());
         userPane.setItems(ChatApplication.chatClient.getUsers());
         String loggedInAs = "Logged in as (" + ChatApplication.chatClient.getUser().toString() + ")";
         chatTitle.setText(loggedInAs);// logged in as ...
     }
-
 
     /* ----------------------------- CONSTRUCTOR ----------------------------- */
     public PublicChatController() {
@@ -73,6 +68,7 @@ public class PublicChatController {
         boolean self = selectedUser.equals(currentUser);
 
         if (!self) {
+            //TODO
             ChatApplication.chatClient.sendRequestPrivateMSG("I want to send a message", selectedUser);
             ChatApplication.launchPrivateChat(selectedUser);
         }

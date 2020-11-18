@@ -24,8 +24,8 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
     private static final Logger logger = Logger.getLogger(ChatClient.class.getName());
 
     private ChatServiceInterface service;
-    private String server;
-    private int serverPortNumber;
+    private final String server;
+    private final int serverPortNumber;
     private final ObservableList<String> messagesPublic;
     private final ObservableList<String> messagesPrivate;
     private final ObservableList<String> users;
@@ -68,7 +68,6 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         }
     }
 
-
     /*  -------------------------------- SENDING MESSAGES -------------------------------- */
     public void sendBroadcastMsg(String message) {
         new Thread(() -> this.sendBroadcastUtil(message)).start();
@@ -85,7 +84,7 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         }
     }
 
-    public void sendPrivateMSG(String text, String receiver) {
+    public void sendPrivateMsg(String text, String receiver) {
         Message message = new Message(user, MessageType.PRIVATE, text, receiver); // PRIVATE has 1 receiver
         try {
             info("Sending private message ...");
@@ -105,36 +104,38 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         }
     }
 
-
-
+    /*  -------------------------------- CLIENT THREAD RUN STUFF -------------------------------- */
     @Override
     public void receiveMessage(Message message) throws RemoteException {
         Platform.runLater(() -> messagesPublic.add(message.getContent()));
     }
 
     @Override
-    public void addToUsers(User user) throws RemoteException {
+    public void addUser(User user) throws RemoteException {
         Platform.runLater(() -> users.add(user.getName()));
     }
 
     @Override
-    public void removeFromUsers(User user) throws RemoteException {
+    public void removeUser(User user) throws RemoteException {
         Platform.runLater(() -> users.remove(user.getName()));
     }
 
-    private static void info(String msg, @Nullable Object... params) {
-        logger.log(Level.INFO, msg, params);
+    /*  -------------------------------- METHODS -------------------------------- */
+    public void resetPrivateChat() {
+        messagesPrivate.clear();
     }
 
-    private static void error(String msg, @Nullable Object... params) {
-        logger.log(Level.WARNING, msg, params);
+    public void addPrivateMessage(Message message) {
+        //TODO called when send private message
+        messagesPrivate.add(message.getContent());
     }
 
-    public ObservableList<String> getMessagesPublic() {
+    /*  -------------------------------- GETTERS -------------------------------- */
+    public ObservableList<String> getPublicMessages() {
         return messagesPublic;
     }
 
-    public ObservableList<String> getMessagesPrivate() {
+    public ObservableList<String> getPrivateMessages() {
         return messagesPrivate;
     }
 
@@ -146,32 +147,21 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public String getServer() {
         return server;
     }
 
-    public void setServer(String server) {
-        this.server = server;
+    /*  -------------------------------- SETTERS -------------------------------- */
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public int getServerPortNumber() {
-        return serverPortNumber;
+    /*  -------------------------------- LOGGER -------------------------------- */
+    private void info(String msg, @Nullable Object... params) {
+        logger.log(Level.INFO, msg, params);
     }
 
-    public void setServerPortNumber(int serverPortNumber) {
-        this.serverPortNumber = serverPortNumber;
+    private void error(String msg, @Nullable Object... params) {
+        logger.log(Level.WARNING, msg, params);
     }
-
-    public void clearPrivateMessages() {
-        messagesPrivate.clear();
-    }
-
-    public void addPrivateMessage(Message message) {
-        messagesPrivate.add(message.getContent());
-    }
-
 }

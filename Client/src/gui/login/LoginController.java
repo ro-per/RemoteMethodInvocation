@@ -9,6 +9,7 @@ import main.ChatApplication;
 import main.ChatClient;
 
 import java.io.IOException;
+import java.rmi.NotBoundException;
 
 public class LoginController {
     private ChatClient chatClient = null;
@@ -35,7 +36,7 @@ public class LoginController {
         userField.setText("romeo");  //TODO REMOVE !!!
     }
 
-    public void connectButtonAction() throws IOException {
+    public void connectButtonAction() throws IOException, NotBoundException {
         String userNameString = this.userField.getText();
         String serverString = serverField.getText();
         String portString = portField.getText();
@@ -83,7 +84,7 @@ public class LoginController {
     }
 
     /* ----------------------------- KEY PRESSED ----------------------------- */
-    public void keyPressed(KeyEvent ke) throws IOException {
+    public void keyPressed(KeyEvent ke) throws IOException, NotBoundException {
         if (ke.getCode().equals(KeyCode.ENTER)) connectButtonAction();
     }
 

@@ -75,7 +75,7 @@ public class ChatService extends UnicastRemoteObject implements ChatServiceInter
             // NOTIFY OTHER USERS
             notifyUsers(user, "disconnected");
 
-            client.removeFromUsers(user);
+            client.removeUser(user);
 
         } catch (IOException | UserNotFoundException e) {
             error(e.getMessage());

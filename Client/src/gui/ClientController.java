@@ -105,7 +105,7 @@ public class ClientController {
             e.printStackTrace();
         }
 
-        chatPane.setItems(chatClient.getMessagesPublic());
+        chatPane.setItems(chatClient.getPublicMessages());
 
     }
 
