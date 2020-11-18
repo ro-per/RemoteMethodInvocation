@@ -66,9 +66,8 @@ public class Message implements Serializable {
     public String getContent() {
         switch (messageType) {
             case BROADCAST:
-                return "[BROADCAST:" + sender.getName() + "]: " + content;
             case PRIVATE:
-                return "[PRIVATE:" + sender.getName() + "]: " + content;
+                return "[" + sender.getName() + "]: " + content;
             default:
                 return content;
         }

@@ -10,6 +10,8 @@ public interface ChatClientInterface extends Remote {
 
     public void receivePublicMessage(Message message) throws RemoteException;
 
+    public void receivePrivateMessage(Message message) throws RemoteException;
+
     public void addUser(User user) throws RemoteException;
 
     public void removeUser(User user) throws RemoteException;

@@ -33,7 +33,6 @@ public class LoginController {
     /* ----------------------------- METHODS ----------------------------- */
     public void initialize() {
         this.chatApplication = ChatApplication.getApplication();
-        userField.setText("romeo");  //TODO REMOVE !!!
     }
 
     public void connectButtonAction() throws IOException, NotBoundException {

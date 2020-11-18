@@ -37,7 +37,6 @@ public class ChatService extends UnicastRemoteObject implements ChatServiceInter
 
             Message message = new Message(user, MessageType.PRIVATE, "Here are users", user.toString());
             sendUserList(message);
-            //TODO set active users
 
             // NOTIFY OTHER USERS
             addUser(user, "connected");
@@ -84,7 +83,7 @@ public class ChatService extends UnicastRemoteObject implements ChatServiceInter
     @Override
     public void sendPrivateMsg(Message message) throws RemoteException {
         ChatClientInterface client = manager.getClientInterfaceByString(message.getReceiverString());
-        client.receivePublicMessage(message);
+        client.receivePrivateMessage(message);
     }
 
     public void sendUserList(Message message) throws IOException {

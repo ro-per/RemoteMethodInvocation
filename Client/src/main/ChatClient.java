@@ -116,6 +116,28 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
     }
 
     @Override
+    public void receivePrivateMessage(Message message) throws RemoteException {
+        Platform.runLater(() -> {
+            MessageType messageType = message.getType();
+            String sender = message.getSender().toString();
+            switch (messageType) {
+                case PRIVATE:
+                    messagesPrivate.add(message.getContent());
+                    break;
+                case REQUEST_PRIVATE:
+                    boolean b = ChatApplication.askOpenNewChat(sender);
+                    if (b) {
+                        ChatApplication.resetPrivateChat();
+                        ChatApplication.launchPrivateChat(sender);
+                    } else {
+                        //TODO ChatApplication.chatClient.sendPrivateMsg("I do not want to talk", sender);
+                    }
+            }
+        });
+    }
+
+
+    @Override
     public void addUser(User user) throws RemoteException {
         Platform.runLater(() -> users.add(user.getName()));
     }
@@ -136,7 +158,6 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
     }
 
     public void addPrivateMessage(Message message) {
-        //TODO called when send private message
         messagesPrivate.add(message.getContent());
     }
 

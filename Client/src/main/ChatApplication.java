@@ -63,7 +63,7 @@ public class ChatApplication extends Application {
         chatClient = new ChatClient(serverName, portNumber);
         chatClient.start();
 
-        if (!chatClient.connectUser(userName)) { //TODO trying to connect ?
+        if (!chatClient.connectUser(userName)) {
             //TODO show login again
             chatClient.receivePublicMessage(new Message(MessageType.PRIVATE, "Error duplicate username"));
 
@@ -140,7 +140,7 @@ public class ChatApplication extends Application {
                     e.printStackTrace();
                 }
             });
-            privateStage.setTitle("Private Chat wit " + user);
+            privateStage.setTitle("Private Chat with " + user);
             privateStage.show();
         } catch (IOException e) {
             e.printStackTrace();

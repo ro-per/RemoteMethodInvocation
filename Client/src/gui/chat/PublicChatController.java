@@ -68,7 +68,6 @@ public class PublicChatController {
         boolean self = selectedUser.equals(currentUser);
 
         if (!self) {
-            //TODO
             ChatApplication.chatClient.sendRequestPrivateMSG("I want to send a message", selectedUser);
             ChatApplication.launchPrivateChat(selectedUser);
         }
