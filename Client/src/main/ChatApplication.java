@@ -38,7 +38,7 @@ public class ChatApplication extends Application {
     public ChatApplication() throws MalformedURLException {
         publicChatController = new PublicChatController();
         if (chatApplication == null) chatApplication = this;
-        String gui_path = "file:src/gui/";
+        String gui_path = "file:Client/src/gui/";
         loginFXML = new URL(gui_path + "login/LoginForm.fxml");
         publicFXML = new URL(gui_path + "chat/PublicChat.fxml");
         privateFXML = new URL(gui_path + "chat/PrivateChat.fxml");
@@ -73,7 +73,7 @@ public class ChatApplication extends Application {
     }
 
     /*  -------------------------------- LOGIN GUI -------------------------------- */
-    public static void showLogin(String title) {
+    public static void showLogin(String title) throws MalformedURLException {
         fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(loginFXML);
         try {

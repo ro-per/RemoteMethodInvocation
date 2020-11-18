@@ -98,6 +98,8 @@ public class ClientController {
                 this.userName.clear();
                 this.serverName.clear();
                 this.portNumber.clear();
+
+                //TODO duplicate username
                 chatClient.receiveMessage(new Message(MessageType.PRIVATE,"Error duplicate username"));
             }
 
