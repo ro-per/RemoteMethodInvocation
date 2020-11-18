@@ -34,46 +34,21 @@ public class ChatService extends UnicastRemoteObject implements ChatServiceInter
         try {
             manager.connectUser(user, client);
 
-/*          Message msg = new Message(serverUser,MessageType.PRIVATE, "Welcome to the chat!");
-            thread.printOnOutputStream(msg);*/
+
+            Message message = new Message(user, MessageType.PRIVATE, "Here are users", user.toString());
+            sendUserList(message);
+            //TODO set active users
 
             // NOTIFY OTHER USERS
-            notifyUsers(user, "connected");
+            addUser(user, "connected");
             return true;
 
         } catch (DuplicateUsernameException | IOException e) {
             Message msg = new Message(serverUser, MessageType.PRIVATE, "Username is already been used.");
-            client.receiveMessage(msg);
+            client.receivePublicMessage(msg);
             info(user.getName() + " failed to connect to server.");
             return false;
         }
-    }
-
-    @Override
-    public void sendBroadcastMsg(Message message) throws RemoteException {
-        Collection<ChatClientInterface> clients = manager.getChatClients();
-        message.setActiveUsers(manager.getUsernames()); //SEND UPDATE ABOUT USERS
-
-        if (!clients.isEmpty()) {
-            for (ChatClientInterface client : manager.getChatClients()) { // each client has own server thread
-                client.receiveMessage(message);
-            }
-            info(message.getSender() + " is broadcasting: " + message);
-        }
-    }
-
-    @Override
-    public void sendPrivateMsg(Message message) throws RemoteException {
-        ChatClientInterface client = manager.getClientInterfaceByString(message.getReceiverString());
-        client.receiveMessage(message);
-    }
-
-    @Override //TODO
-    public void sendUserList(Message message) throws IOException {
-        ChatClientInterface client = manager.getClientInterfaceByString(message.getReceiverString());
-        Set<String> users = manager.getUsernames();
-        message.setActiveUsers(users);
-        client.receiveUserList(message);
     }
 
     @Override
@@ -83,7 +58,7 @@ public class ChatService extends UnicastRemoteObject implements ChatServiceInter
             manager.disconnectUser(user);
 
             // NOTIFY OTHER USERS
-            notifyUsers(user, "disconnected");
+            removeUser(user, "disconnected");
 
             client.removeUser(user);
 
@@ -93,12 +68,55 @@ public class ChatService extends UnicastRemoteObject implements ChatServiceInter
 
     }
 
-    private void notifyUsers(User user, String info) throws IOException {
-        // NOTIFY OTHER USERS
-        Message msg1 = new Message(MessageType.BROADCAST, user.getName() + " is " + info);
-        msg1.setSender(serverUser);
-        sendBroadcastMsg(msg1);
+    @Override
+    public void sendBroadcastMsg(Message message) throws RemoteException {
+        Collection<ChatClientInterface> clients = manager.getChatClients();
+        //message.setActiveUsers(manager.getUsernames()); //SEND UPDATE ABOUT USERS
+
+        if (!clients.isEmpty()) {
+            for (ChatClientInterface client : manager.getChatClients()) { // each client has own server thread
+                client.receivePublicMessage(message);
+            }
+            info(message.getSender() + " is broadcasting: " + message);
+        }
     }
+
+    @Override
+    public void sendPrivateMsg(Message message) throws RemoteException {
+        ChatClientInterface client = manager.getClientInterfaceByString(message.getReceiverString());
+        client.receivePublicMessage(message);
+    }
+
+    public void sendUserList(Message message) throws IOException {
+        ChatClientInterface client = manager.getClientInterfaceByString(message.getReceiverString());
+        Set<String> users = manager.getUsernames();
+        message.setActiveUsers(users);
+        client.receiveUserList(message);
+    }
+
+    private void addUser(User user, String info) throws IOException {
+        Collection<ChatClientInterface> clients = manager.getChatClients();
+
+        if (!clients.isEmpty()) {
+            for (ChatClientInterface client : manager.getChatClients()) { // each client has own server thread
+                client.addUser(user);
+            }
+            info(user.toString() + " is being added to all lists" + "info:" + info);
+        }
+    }
+
+
+    private void removeUser(User user, String info) throws IOException {
+        Collection<ChatClientInterface> clients = manager.getChatClients();
+
+        if (!clients.isEmpty()) {
+            for (ChatClientInterface client : manager.getChatClients()) { // each client has own server thread
+                client.removeUser(user);
+            }
+            info(user.toString() + " is being removed from all lists" + "info:" + info);
+        }
+    }
+
 
     private static void info(String msg, @Nullable Object... params) {
         logger.log(Level.INFO, msg, params);

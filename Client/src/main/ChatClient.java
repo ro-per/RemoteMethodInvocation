@@ -55,10 +55,9 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         if (service.connectUser(user, this)) {
             info("Trying to connect " + name);
 
-            Message msg1 = new Message(MessageType.USER_CONNECTED, user.getName());
-            //TODO set active users
-            Message message = new Message(user, MessageType.PRIVATE, "Here are users", user.toString());
-            service.sendUserList(message);
+
+            removeUser(this.user);
+
             return true;
         }
         return false;
@@ -112,7 +111,7 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
 
     /*  -------------------------------- CLIENT THREAD RUN STUFF -------------------------------- */
     @Override
-    public void receiveMessage(Message message) throws RemoteException {
+    public void receivePublicMessage(Message message) throws RemoteException {
         Platform.runLater(() -> messagesPublic.add(message.getContent()));
     }
 
@@ -125,8 +124,9 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
     public void removeUser(User user) throws RemoteException {
         Platform.runLater(() -> users.remove(user.getName()));
     }
+
     @Override
-    public void receiveUserList(Message message) throws RemoteException{
+    public void receiveUserList(Message message) throws RemoteException {
         Platform.runLater(() -> users.addAll(message.getActiveUsers()));
     }
 

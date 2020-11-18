@@ -65,7 +65,7 @@ public class ChatApplication extends Application {
 
         if (!chatClient.connectUser(userName)) { //TODO trying to connect ?
             //TODO show login again
-            chatClient.receiveMessage(new Message(MessageType.PRIVATE, "Error duplicate username"));
+            chatClient.receivePublicMessage(new Message(MessageType.PRIVATE, "Error duplicate username"));
 
         } else {
             launchPublicChat();

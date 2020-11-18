@@ -12,9 +12,7 @@ import messages.Message;
 import messages.MessageType;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 
 public class ClientController {
 
@@ -101,7 +99,7 @@ public class ClientController {
                 this.portNumber.clear();
 
                 //TODO duplicate username
-                chatClient.receiveMessage(new Message(MessageType.PRIVATE,"Error duplicate username"));
+                chatClient.receivePublicMessage(new Message(MessageType.PRIVATE,"Error duplicate username"));
             }
 
         } catch (NotBoundException | IOException e) {

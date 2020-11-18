@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 
 public interface ChatClientInterface extends Remote {
 
-    public void receiveMessage(Message message) throws RemoteException;
+    public void receivePublicMessage(Message message) throws RemoteException;
 
     public void addUser(User user) throws RemoteException;
 
