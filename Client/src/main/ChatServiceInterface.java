@@ -3,6 +3,7 @@ package main;
 import messages.Message;
 import user.User;
 
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -17,5 +18,7 @@ public interface ChatServiceInterface extends Remote {
     public void sendPrivateMsg(Message message) throws RemoteException;
 
     public void disconnectUser(User user, ChatClientInterface client) throws RemoteException;
+
+    public void sendUserList(Message message) throws IOException;
 
 }

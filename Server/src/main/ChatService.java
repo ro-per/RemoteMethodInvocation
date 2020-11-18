@@ -1,16 +1,18 @@
+package main;
+
 import com.sun.istack.internal.Nullable;
 import exceptions.DuplicateUsernameException;
 import exceptions.UserNotFoundException;
-import main.ChatClientInterface;
-import main.ChatServiceInterface;
 import messages.Message;
 import messages.MessageType;
 import user.User;
+import user.UserManager;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Collection;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,6 +66,14 @@ public class ChatService extends UnicastRemoteObject implements ChatServiceInter
     public void sendPrivateMsg(Message message) throws RemoteException {
         ChatClientInterface client = manager.getClientInterfaceByString(message.getReceiverString());
         client.receiveMessage(message);
+    }
+
+    @Override //TODO
+    public void sendUserList(Message message) throws IOException {
+        ChatClientInterface client = manager.getClientInterfaceByString(message.getReceiverString());
+        Set<String> users = manager.getUsernames();
+        message.setActiveUsers(users);
+        client.receiveUserList(message);
     }
 
     @Override

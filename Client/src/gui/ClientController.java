@@ -11,6 +11,7 @@ import main.ChatClient;
 import messages.Message;
 import messages.MessageType;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -103,7 +104,7 @@ public class ClientController {
                 chatClient.receiveMessage(new Message(MessageType.PRIVATE,"Error duplicate username"));
             }
 
-        } catch (RemoteException | MalformedURLException | NotBoundException  e) {
+        } catch (NotBoundException | IOException e) {
             e.printStackTrace();
         }
 

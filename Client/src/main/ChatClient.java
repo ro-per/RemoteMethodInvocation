@@ -1,6 +1,7 @@
 package main;
 
 import com.sun.istack.internal.Nullable;
+import com.sun.org.glassfish.gmbal.ManagedObject;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,10 +50,15 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
     }
 
     /*  -------------------------------- CONNECT/DISCONNECT -------------------------------- */
-    public boolean connectUser(String name) throws RemoteException {
+    public boolean connectUser(String name) throws IOException {
         user = new User(name);
         if (service.connectUser(user, this)) {
             info("Trying to connect " + name);
+
+            Message msg1 = new Message(MessageType.USER_CONNECTED, user.getName());
+            //TODO set active users
+            Message message = new Message(user, MessageType.PRIVATE, "Here are users", user.toString());
+            service.sendUserList(message);
             return true;
         }
         return false;
@@ -118,6 +124,10 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
     @Override
     public void removeUser(User user) throws RemoteException {
         Platform.runLater(() -> users.remove(user.getName()));
+    }
+    @Override
+    public void receiveUserList(Message message) throws RemoteException{
+        Platform.runLater(() -> users.addAll(message.getActiveUsers()));
     }
 
     /*  -------------------------------- METHODS -------------------------------- */
