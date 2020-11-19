@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import messages.Message;
 import messages.MessageType;
+import user.User;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -39,9 +40,9 @@ public class ChatApplication extends Application {
         publicChatController = new PublicChatController();
         if (chatApplication == null) chatApplication = this;
         ClassLoader classLoader = getClass().getClassLoader();
-        loginFXML= classLoader.getResource("gui/LoginForm.fxml");
-        publicFXML= classLoader.getResource("gui/PublicChat.fxml");
-        privateFXML= getClass().getClassLoader().getResource("gui/PrivateChat.fxml");
+        loginFXML = classLoader.getResource("gui/LoginForm.fxml");
+        publicFXML = classLoader.getResource("gui/PublicChat.fxml");
+        privateFXML =classLoader.getResource("gui/PrivateChat.fxml");
     }
 
     /*  -------------------------------- START -------------------------------- */
@@ -64,9 +65,7 @@ public class ChatApplication extends Application {
         chatClient.start();
 
         if (!chatClient.connectUser(userName)) {
-            //TODO show login again
-            chatClient.receivePublicMessage(new Message(MessageType.PRIVATE, "Error duplicate username"));
-
+            chatClient.receivePublicMessage(new Message(new User("server"), MessageType.ERROR_LOGIN, "Error duplicate username"));
         } else {
             launchPublicChat();
         }

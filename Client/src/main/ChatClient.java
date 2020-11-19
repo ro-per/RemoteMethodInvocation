@@ -112,26 +112,46 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
     /*  -------------------------------- CLIENT THREAD RUN STUFF -------------------------------- */
     @Override
     public void receivePublicMessage(Message message) throws RemoteException {
-        Platform.runLater(() -> messagesPublic.add(message.getContent()));
+        Platform.runLater(() -> {
+            MessageType messageType = message.getType();
+            String content = message.getContent();
+            switch (messageType) {
+                case ERROR_LOGIN:
+                    try {
+                        ChatApplication.showLogin(content);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                default:
+                    messagesPublic.add(message.getContent());
+                    break;
+            }
+        });
     }
 
     @Override
     public void receivePrivateMessage(Message message) throws RemoteException {
         Platform.runLater(() -> {
-            MessageType messageType = message.getType();
-            String sender = message.getSender().toString();
-            switch (messageType) {
-                case PRIVATE:
-                    messagesPrivate.add(message.getContent());
-                    break;
-                case REQUEST_PRIVATE:
-                    boolean b = ChatApplication.askOpenNewChat(sender);
-                    if (b) {
-                        ChatApplication.resetPrivateChat();
-                        ChatApplication.launchPrivateChat(sender);
-                    } else {
-                        //TODO ChatApplication.chatClient.sendPrivateMsg("I do not want to talk", sender);
-                    }
+            try {
+                MessageType messageType = message.getType();
+                String sender = message.getSender().toString();
+                switch (messageType) {
+                    case PRIVATE:
+                        messagesPrivate.add(message.getContent());
+                        break;
+                    case REQUEST_PRIVATE:
+                        boolean b = ChatApplication.askOpenNewChat(sender);
+                        if (b) {
+                            ChatApplication.resetPrivateChat();
+                            ChatApplication.launchPrivateChat(sender);
+                        } else {
+                            Message msg = new Message(user, MessageType.PRIVATE, "I do not want to talk now", sender);
+                            service.sendPrivateMsg(msg);
+                        }
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         });
     }
@@ -157,8 +177,8 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         messagesPrivate.clear();
     }
 
-    public void addPrivateMessage(Message message) {
-        messagesPrivate.add(message.getContent());
+    public static void addPrivateMessage(String text) {
+        messagesPrivate.add(text);
     }
 
     /*  -------------------------------- GETTERS -------------------------------- */

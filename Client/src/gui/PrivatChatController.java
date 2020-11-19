@@ -57,6 +57,7 @@ public class PrivatChatController {
         if (!text.isEmpty()) {
             ChatApplication.chatClient.sendPrivateMsg(text, correspondent);
             msgField.clear();
+            ChatClient.addPrivateMessage(text);
         } else {
             flashTextField(this.msgField);
         }

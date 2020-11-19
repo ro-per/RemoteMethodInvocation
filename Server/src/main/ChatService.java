@@ -43,7 +43,7 @@ public class ChatService extends UnicastRemoteObject implements ChatServiceInter
             return true;
 
         } catch (DuplicateUsernameException | IOException e) {
-            Message msg = new Message(serverUser, MessageType.PRIVATE, "Username is already been used.");
+            Message msg = new Message(serverUser, MessageType.ERROR_LOGIN, "Username is already been used.");
             client.receivePublicMessage(msg);
             info(user.getName() + " failed to connect to server.");
             return false;
