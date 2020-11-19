@@ -42,7 +42,7 @@ public class ChatApplication extends Application {
         ClassLoader classLoader = getClass().getClassLoader();
         loginFXML = classLoader.getResource("gui/LoginForm.fxml");
         publicFXML = classLoader.getResource("gui/PublicChat.fxml");
-        privateFXML =classLoader.getResource("gui/PrivateChat.fxml");
+        privateFXML = classLoader.getResource("gui/PrivateChat.fxml");
     }
 
     /*  -------------------------------- START -------------------------------- */

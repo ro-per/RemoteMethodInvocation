@@ -177,7 +177,7 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         messagesPrivate.clear();
     }
 
-    public static void addPrivateMessage(String text) {
+    public void addPrivateMessage(String text) {
         messagesPrivate.add(text);
     }
 
