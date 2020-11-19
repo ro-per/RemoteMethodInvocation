@@ -1,7 +1,7 @@
 package main;
 
-import gui.chat.PrivatChatController;
-import gui.chat.PublicChatController;
+import gui.PrivatChatController;
+import gui.PublicChatController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -38,10 +38,10 @@ public class ChatApplication extends Application {
     public ChatApplication() throws MalformedURLException {
         publicChatController = new PublicChatController();
         if (chatApplication == null) chatApplication = this;
-        String gui_path = "file:Client/src/gui/";
-        loginFXML = new URL(gui_path + "login/LoginForm.fxml");
-        publicFXML = new URL(gui_path + "chat/PublicChat.fxml");
-        privateFXML = new URL(gui_path + "chat/PrivateChat.fxml");
+        ClassLoader classLoader = getClass().getClassLoader();
+        loginFXML= classLoader.getResource("gui/LoginForm.fxml");
+        publicFXML= classLoader.getResource("gui/PublicChat.fxml");
+        privateFXML= getClass().getClassLoader().getResource("gui/PrivateChat.fxml");
     }
 
     /*  -------------------------------- START -------------------------------- */

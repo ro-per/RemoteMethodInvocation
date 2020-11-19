@@ -1,4 +1,4 @@
-package gui.chat;
+package gui;
 
 import com.sun.istack.internal.Nullable;
 import javafx.application.Platform;

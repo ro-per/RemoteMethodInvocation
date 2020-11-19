@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <BorderPane onKeyPressed="#keyPressed" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.login.LoginController">
+            fx:controller="gui.LoginController">
     <left>
         <TextField fx:id="userField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                    onMouseClicked="#userNameClicked" promptText="username" BorderPane.alignment="CENTER">

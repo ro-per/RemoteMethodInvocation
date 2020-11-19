@@ -1,4 +1,4 @@
-package gui.chat;
+package gui;
 
 import main.*;
 import com.sun.istack.internal.Nullable;
