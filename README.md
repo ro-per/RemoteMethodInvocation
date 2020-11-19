@@ -29,7 +29,7 @@ Implement a simple chatsystem with following features:
 ### Login screen
 * lets user choose
 
-# How to run the jars ?
+## How to run the jars ?
 * TODO
 
 ## Screenshots
