@@ -24,8 +24,9 @@
                             maxWidth="1.7976931348623157E308" pannable="true" prefHeight="496.0" vbarPolicy="ALWAYS"
                             vmin="1.0" vvalue="1.0" VBox.vgrow="ALWAYS">
                     <content>
-                        <ListView fx:id="chatPanePrivate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                                  prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparant;"/>
+                        <ListView fx:id="chatPanePrivate" maxHeight="1.7976931348623157E308"
+                                  maxWidth="1.7976931348623157E308"
+                                  prefHeight="200.0" prefWidth="200.0"/>
                     </content>
                 </ScrollPane>
             </children>

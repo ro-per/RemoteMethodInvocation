@@ -15,6 +15,12 @@ public class ChatServer {
     public static void main(String[] args) {
         int portNumber = 1000;
         try {
+            portNumber = Integer.parseInt(args[0]);
+        } catch (NumberFormatException ne) {
+            System.out.println("Port could not be parsed, cause: " + ne.getCause());
+            System.out.println("Standard port 1000 is used.");
+        }
+        try {
             Registry registry = LocateRegistry.createRegistry(portNumber);
             registry.rebind(ChatServiceInterface.SERVICE_NAME, new ChatService());
             info("Server is running on port: " + portNumber);

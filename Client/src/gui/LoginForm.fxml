@@ -18,7 +18,7 @@
     </center>
     <right>
         <TextField fx:id="portField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                   onMouseClicked="#portClicked" promptText="port" text="1000" BorderPane.alignment="CENTER">
+                   onMouseClicked="#portClicked" promptText="port" BorderPane.alignment="CENTER">
 
         </TextField>
     </right>
