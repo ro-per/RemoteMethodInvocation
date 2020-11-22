@@ -20,18 +20,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ChatClient extends UnicastRemoteObject implements ChatClientInterface {
-
     private static final long serialVersionUID = 77L;
+    /*  -------------------------------- LOGGER -------------------------------- */
     private static final Logger logger = Logger.getLogger(ChatClient.class.getName());
 
+    /*  -------------------------------- CONNECTION STUFF -------------------------------- */
     private ChatServiceInterface service;
     private final String server;
     private final int serverPortNumber;
+
+    /*  -------------------------------- LISTS -------------------------------- */
     private final ObservableList<String> messagesPublic;
     private final ObservableList<String> messagesPrivate;
     private final ObservableList<String> users;
+
+    /*  -------------------------------- USER INFO -------------------------------- */
     private User user;
 
+    /*  -------------------------------- CONSTRUCTORS -------------------------------- */
     public ChatClient(String serverName, int serverPortNumber) throws RemoteException, MalformedURLException, NotBoundException {
         super();
         this.server = serverName;
@@ -42,11 +48,14 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         this.messagesPrivate = FXCollections.observableArrayList();
         this.users = FXCollections.observableArrayList();
 
+        logger.log(Level.FINE, "Constructor 'ChatClient(String serverName, int serverPortNumber)' used");
     }
 
+    /*  -------------------------------- START -------------------------------- */
     public void start() throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(server, serverPortNumber);
         service = (ChatServiceInterface) registry.lookup(ChatServiceInterface.SERVICE_NAME);
+        logger.log(Level.INFO, "Client started");
     }
 
     /*  -------------------------------- CONNECT/DISCONNECT -------------------------------- */
@@ -54,10 +63,7 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         user = new User(name);
         if (service.connectUser(user, this)) {
             info("Trying to connect " + name);
-
-
             removeUser(this.user);
-
             return true;
         }
         return false;
@@ -109,7 +115,7 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         }
     }
 
-    /*  -------------------------------- CLIENT THREAD RUN STUFF -------------------------------- */
+    /*  -------------------------------- GETTING MESSAGES -------------------------------- */
     @Override
     public void receivePublicMessage(Message message) throws RemoteException {
         Platform.runLater(() -> {
@@ -156,7 +162,12 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         });
     }
 
+    @Override
+    public void receiveUserList(Message message) throws RemoteException {
+        Platform.runLater(() -> users.addAll(message.getActiveUsers()));
+    }
 
+    /*  -------------------------------- METHODS -------------------------------- */
     @Override
     public void addUser(User user) throws RemoteException {
         Platform.runLater(() -> users.add(user.getName()));
@@ -167,12 +178,6 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientInterfa
         Platform.runLater(() -> users.remove(user.getName()));
     }
 
-    @Override
-    public void receiveUserList(Message message) throws RemoteException {
-        Platform.runLater(() -> users.addAll(message.getActiveUsers()));
-    }
-
-    /*  -------------------------------- METHODS -------------------------------- */
     public void resetPrivateChat() {
         messagesPrivate.clear();
     }

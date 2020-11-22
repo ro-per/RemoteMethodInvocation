@@ -31,7 +31,7 @@ public class ChatApplication extends Application {
     public static ChatClient chatClient = null;
     private static PublicChatController publicChatController;
     private static URL loginFXML, publicFXML, privateFXML;
-    public static final String title = "Socket-based Chat service";
+    public static final String title = "Socket-based Chat";
     public static FXMLLoader fxmlLoader;
     public static String correspondent = null;
 
@@ -48,12 +48,10 @@ public class ChatApplication extends Application {
     /*  -------------------------------- START -------------------------------- */
     @Override
     public void start(Stage primaryStage) {
-
-        //Init stage
         publicStage = primaryStage;
         publicStage.setTitle(title);
         try {
-            showLogin("Welcome to RMI chat");
+            showLogin("Welcome to "+title);
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
         }
